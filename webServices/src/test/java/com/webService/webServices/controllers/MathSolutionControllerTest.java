@@ -1,5 +1,6 @@
 package com.webService.webServices.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.webService.webServices.models.MathSolution;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -24,77 +28,92 @@ public class MathSolutionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    String inputJSON;
     private ObjectMapper mapper = new ObjectMapper();
 
+    @Before
+    public void setUp() throws Exception {
+        MathSolution inputMathSolution = new MathSolution(2,2);
+        inputJSON = mapper.writeValueAsString(inputMathSolution);
+    }
+
+
     @Test
-    public void shouldAddOperandsInRequestBody() throws Exception {
-        // ARRANGE / TEST SETUP
+    public void shouldAddOperandsInRequestBodyAndReturnMathOperationWithStatus200() throws Exception {
+        // ARRANGE
         MathSolution outputMathSolution = new MathSolution(2,2,"add", 4);
-        MathSolution inputMathSolution = new MathSolution(2,2,"add", 4);
-
         String outputJSON = mapper.writeValueAsString(outputMathSolution);
-        String inputJSON = mapper.writeValueAsString(inputMathSolution);
-
         // ACT
         mockMvc.perform(post("/add")
                 .content(inputJSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                // ASSERT
                 .andExpect(status().isCreated())
                 .andExpect(content().json(outputJSON));
     }
 
     @Test
-    public void shouldSubtractOperandsInRequestBody() throws Exception {
-        // ARRANGE / TEST SETUP
+    public void shouldSubtractOperandsInRequestBodyAndReturnMathOperationWithStatus200() throws Exception {
+        // ARRANGE
         MathSolution outputMathSolution = new MathSolution(2,2,"subtract", 0);
-        MathSolution inputMathSolution = new MathSolution(2,2,"subtract", 0);
-
         String outputJSON = mapper.writeValueAsString(outputMathSolution);
-        String inputJSON = mapper.writeValueAsString(inputMathSolution);
-
         // ACT
         mockMvc.perform(post("/subtract")
                         .content(inputJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                // ASSERT
                 .andExpect(status().isCreated())
                 .andExpect(content().json(outputJSON));
     }
 
     @Test
-    public void shouldMultiplyOperandsInRequestBody() throws Exception {
-        // ARRANGE / TEST SETUP
+    public void shouldMultiplyOperandsInRequestBodyAndReturnMathOperationWithStatus200() throws Exception {
+        // ARRANGE
         MathSolution outputMathSolution = new MathSolution(2,2,"multiply", 4);
-        MathSolution inputMathSolution = new MathSolution(2,2,"multiply", 4);
-
         String outputJSON = mapper.writeValueAsString(outputMathSolution);
-        String inputJSON = mapper.writeValueAsString(inputMathSolution);
-
         // ACT
         mockMvc.perform(post("/multiply")
                         .content(inputJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                // ASSERT
                 .andExpect(status().isCreated())
                 .andExpect(content().json(outputJSON));
     }
 
     @Test
-    public void shouldDivideOperandsInRequestBody() throws Exception {
-        // ARRANGE / TEST SETUP
+    public void shouldDivideOperandsInRequestBodyAndReturnMathOperationWithStatus200() throws Exception {
+        // ARRANGE
         MathSolution outputMathSolution = new MathSolution(2,2,"divide", 1);
-        MathSolution inputMathSolution = new MathSolution(2,2,"divide", 1);
-
         String outputJSON = mapper.writeValueAsString(outputMathSolution);
-        String inputJSON = mapper.writeValueAsString(inputMathSolution);
-
         // ACT
         mockMvc.perform(post("/divide")
                         .content(inputJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                // ASSERT
                 .andExpect(status().isCreated())
                 .andExpect(content().json(outputJSON));
+    }
+
+    @Test
+    public void shouldRespondWith422ErrorIfOperandsAreMissingOrAreNotNumber() throws Exception {
+//         ARRANGE
+        MathSolution inputMissingNumber = new MathSolution();
+        inputMissingNumber.setOperand1(1);
+
+        Map<String, String> randomObject = new HashMap<>();
+        randomObject.put("operand1", "test");
+        randomObject.put("operand2", "false");
+
+        String inputJSON = mapper.writeValueAsString(randomObject);
+        // ACT
+        mockMvc.perform(post("/add")
+                .content(inputJSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

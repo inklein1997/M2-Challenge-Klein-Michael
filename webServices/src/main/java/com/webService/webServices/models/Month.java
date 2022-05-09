@@ -1,5 +1,7 @@
 package com.webService.webServices.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -7,7 +9,10 @@ import java.util.Objects;
 public class Month {
     @NotNull
     @NotEmpty
+    @Min(1)
+    @Max(12)
     private int number;
+
     private String name;
 
     public Month(int number, String name) {

@@ -1,26 +1,29 @@
 package com.webService.webServices.models;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class MathSolution {
 
-    @NotNull
-    @NotEmpty
-    private int operand1;
+    @NotNull(message="Please enter an integer")
+    private Integer operand1;
 
-    @NotNull
-    @NotEmpty
-    private int operand2;
+    @NotNull(message="Please enter an integer")
+    private Integer operand2;
+
     private String operation;
     private int answer;
 
-    public MathSolution(int operand1, int operand2, String operation, int answer) {
+    public MathSolution(Integer operand1, Integer operand2, String operation, int answer) {
         this.operand1 = operand1;
         this.operand2 = operand2;
         this.operation = operation;
         this.answer = answer;
+    }
+
+    public MathSolution(Integer operand1, Integer operand2) {
+        this.operand1 = operand1;
+        this.operand2 = operand2;
     }
 
     public MathSolution() {}
@@ -29,7 +32,7 @@ public class MathSolution {
         return operand1;
     }
 
-    public void setOperand1(int operand1) {
+    public void setOperand1(Integer operand1) {
         this.operand1 = operand1;
     }
 
@@ -37,7 +40,7 @@ public class MathSolution {
         return operand2;
     }
 
-    public void setOperand2(int operand2) {
+    public void setOperand2(Integer operand2) {
         this.operand2 = operand2;
     }
 
@@ -62,7 +65,7 @@ public class MathSolution {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MathSolution that = (MathSolution) o;
-        return operand1 == that.operand1 && operand2 == that.operand2 && answer == that.answer && Objects.equals(operation, that.operation);
+        return answer == that.answer && Objects.equals(operand1, that.operand1) && Objects.equals(operand2, that.operand2) && Objects.equals(operation, that.operation);
     }
 
     @Override
