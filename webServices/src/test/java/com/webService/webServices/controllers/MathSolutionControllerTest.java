@@ -99,21 +99,62 @@ public class MathSolutionControllerTest {
     }
 
     @Test
-    public void shouldRespondWith422ErrorIfOperandsAreMissingOrAreNotNumber() throws Exception {
+    public void shouldRespondWith422ErrorIfOperandsAreMissing() throws Exception {
 //         ARRANGE
-        MathSolution inputMissingNumber = new MathSolution();
-        inputMissingNumber.setOperand1(1);
+        Map<String, Integer> inputObject = new HashMap<>();
+        inputObject.put("operand1", 1);
 
-        Map<String, String> randomObject = new HashMap<>();
-        randomObject.put("operand1", "test");
-        randomObject.put("operand2", "false");
-
-        String inputJSON = mapper.writeValueAsString(randomObject);
+        String inputJSON = mapper.writeValueAsString(inputObject);
         // ACT
         mockMvc.perform(post("/add")
                 .content(inputJSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void shouldRespondWith422ErrorIfOperandsAreNotNumbers() throws Exception {
+
+        Map<String, String> randomObject = new HashMap<>();
+        randomObject.put("operand1", "test");
+        randomObject.put("operand2", "false");
+
+        String inputJSON = mapper.writeValueAsString(randomObject);
+
+        mockMvc.perform(post("/multiply")
+                        .content(inputJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+
+        Map<String, Boolean> randomObject1 = new HashMap<>();
+        randomObject1.put("operand1", false);
+        randomObject1.put("operand2", false);
+
+        String inputJSON1 = mapper.writeValueAsString(randomObject1);
+
+        mockMvc.perform(post("/multiply")
+                        .content(inputJSON1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+
+    @Test
+    public void shouldRespondWith422ErrorIfOperand2IsZero() throws Exception {
+        MathSolution inputDivideWith0 = new MathSolution();
+        inputDivideWith0.setOperand1(1);
+        inputDivideWith0.setOperand2(0);
+
+        String inputJson = mapper.writeValueAsString(inputDivideWith0);
+
+        mockMvc.perform(post("/divide")
+                .content(inputJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+
     }
 }
