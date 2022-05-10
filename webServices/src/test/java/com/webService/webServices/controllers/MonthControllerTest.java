@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MathSolutionController.class)
+@WebMvcTest(MonthController.class)
 public class MonthControllerTest {
 
     @Autowired
