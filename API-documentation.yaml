@@ -1,5 +1,3 @@
-# API Documentation
-```
 openapi: 3.0.1
 info:
   title: OpenAPI definition
@@ -171,4 +169,3 @@ components:
           format: int32
         name:
           type: string
-```
